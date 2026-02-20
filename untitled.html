@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>.Fruity Friends Salad</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Poppins',sans-serif;margin:0;background:#fdf6fb;color:#333;}
+.container{max-width:500px;margin:auto;padding:20px;}
+.header{text-align:center;margin-bottom:15px;}
+.header h1{color:#ff4d88;margin:0;}
+.header p{font-size:14px;color:#555;}
+.promo{background:#ffe6f0;color:#ff4d88;padding:10px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;}
+.card{background:white;padding:15px 20px;border-radius:15px;margin-bottom:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+.card h3{margin:10px 0;}
+.card .price{color:#e67e22;font-weight:bold;}
+input[type="text"], input[type="number"]{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;margin-bottom:10px;}
+.menu-item{margin-bottom:15px;}
+.menu-item label{display:block;font-weight:bold;margin-bottom:5px;}
+.menu-item input[type="number"]{width:80px;margin-top:5px;}
+.options{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+.options div{padding:8px 12px;border:1px solid #ccc;border-radius:12px;cursor:pointer;}
+.options div.selected{background:#ff4d88;color:white;border-color:#ff4d88;}
+.button{width:100%;padding:12px;background:#ff4d88;color:white;font-size:16px;border:none;border-radius:12px;cursor:pointer;margin-top:10px;}
+.button:hover{background:#e6005c;}
+.total{background:#ffe6f0;padding:10px;border-radius:10px;margin-top:10px;font-weight:bold;white-space:pre-line;}
+.brand{text-align:center;font-size:14px;color:#ff4d88;margin-top:15px;}
+.info{font-size:14px;color:#555;text-align:center;margin-top:10px;}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+<h1>.Fruity Friends Salad</h1>
+<p>Fresh • Premium • by Luna 💛</p>
+</div>
+
+<div class="promo">Diskon 7K + Gratis Ongkir untuk pembelian minimal 3 item!</div>
+
+<div class="card">
+<h3>Informasi Pemesan</h3>
+<input type="text" id="nama" placeholder="Nama">
+<input type="text" id="alamat" placeholder="Alamat">
+</div>
+
+<div class="card">
+<h3>Menu Pilihan</h3>
+<div class="menu-item">
+<label>Super Premium - Rp15.000</label>
+<input type="number" id="super" value="1" min="0">
+</div>
+<div class="menu-item">
+<label>Regular Premium - Rp13.000 (SOLD OUT)</label>
+<input type="number" value="0" disabled>
+</div>
+<div class="menu-item">
+<label>Mini - Rp5.000 (SOLD OUT)</label>
+<input type="number" value="0" disabled>
+</div>
+<div class="menu-item">
+<label>Extra Premium - Rp17.000</label>
+<input type="number" id="extra" value="1" min="0">
+</div>
+</div>
+
+<div class="card">
+<h3>Pilih Buah</h3>
+<div class="options" id="buahOptions">
+<div data-fruit="Apel">Apel</div>
+<div data-fruit="Mangga">Mangga</div>
+<div data-fruit="Naga">Naga</div>
+<div data-fruit="Pir">Pir</div>
+<div data-fruit="Agar-Agar">Agar-Agar</div>
+<div data-fruit="Jeruk">Jeruk</div>
+<div data-fruit="Melon">Melon</div>
+<div data-fruit="Anggur">Anggur</div>
+<div data-fruit="All Item">All Item</div>
+</div>
+</div>
+
+<div class="card">
+<label>Kode Voucher</label>
+<input type="text" id="voucher" placeholder="Masukkan kode promo">
+</div>
+
+<div class="total" id="totalHarga">Subtotal: Rp0</div>
+<button class="button" onclick="pesan()">Pesan via WhatsApp</button>
+
+<div class="info">
+<p>🚚 Ongkir Maks 5K seluruh Rancaekek</p>
+<p>📍 Alamat: Jalan Rancakhiang, belakang RTC, Rancaekek, Bandung</p>
+<p>📱 WA: 0821-1482-4538</p>
+</div>
+
+<div class="brand">by Luna 💛</div>
+</div>
+
+<script>
+// Pilih buah
+document.querySelectorAll('#buahOptions div').forEach(d=>{
+  d.addEventListener('click',()=>{
+    d.classList.toggle('selected');
+    hitungTotal();
+  });
+});
+
+// Hitung total
+function hitungTotal(){
+  let total=0;
+  let ongkir=5000, layanan=2000;
+  let superQty=parseInt(document.getElementById('super').value)||0;
+  let extraQty=parseInt(document.getElementById('extra').value)||0;
+  total += superQty*15000 + extraQty*17000;
+
+  let itemCount = superQty + extraQty;
+  let diskon =0;
+
+  if(itemCount>=3){ diskon=7000; ongkir=0; }
+
+  let totalBayar = total - diskon + ongkir + layanan;
+  totalBayar = totalBayar<0?0:totalBayar;
+
+  document.getElementById('totalHarga').innerText=
+    `Subtotal: Rp${total.toLocaleString()}
+Diskon: Rp${diskon.toLocaleString()}
+Ongkir: Rp${ongkir.toLocaleString()}
+Layanan: Rp${layanan.toLocaleString()}
+Total: Rp${totalBayar.toLocaleString()}`;
+}
+document.querySelectorAll('input').forEach(i=>i.addEventListener('input', hitungTotal));
+hitungTotal();
+
+// Pesan WhatsApp
+function pesan(){
+  let nama=document.getElementById('nama').value.trim();
+  let alamat=document.getElementById('alamat').value.trim();
+  if(!nama||!alamat){alert('Isi nama & alamat!'); return;}
+
+  let superQty=parseInt(document.getElementById('super').value)||0;
+  let extraQty=parseInt(document.getElementById('extra').value)||0;
+  let total=superQty*15000 + extraQty*17000;
+  let ongkir=5000, layanan=2000, diskon=0;
+  let itemCount = superQty + extraQty;
+
+  if(itemCount>=3){ diskon=7000; ongkir=0; }
+
+  let totalBayar=total - diskon + ongkir + layanan;
+
+  let buah=[];
+  document.querySelectorAll('#buahOptions div.selected').forEach(d=>buah.push(d.dataset.fruit));
+  let buahText=buah.length?buah.join(', '):'Standar';
+
+  let text=`Halo 😊%0A%0ASaya ingin pesan Fruity Friends Salad%0A`;
+  if(superQty) text+=`Super Premium x${superQty}%0A`;
+  if(extraQty) text+=`Extra Premium x${extraQty}%0A`;
+  text+=`Isi Buah: ${buahText}%0ATotal Bayar: Rp${totalBayar.toLocaleString()}%0ANama: ${nama}%0AAlamat: ${alamat}`;
+
+  window.open(`https://wa.me/6282146084538?text=${text}`,'_blank');
+}
+</script>
+</body>
+</html>
